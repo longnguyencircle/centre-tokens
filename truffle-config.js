@@ -40,6 +40,10 @@ module.exports = {
       provider: infuraProvider("mainnet"),
       network_id: 1,
     },
+    goerli: {
+      provider: infuraProvider("goerli"),
+      network_id: 5,
+    },
     ropsten: {
       provider: infuraProvider("ropsten"),
       network_id: 3,

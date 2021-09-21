@@ -77,8 +77,7 @@ addresses of proxy admin, owner, master minter, blacklister, and pauser in
 `config.js`. This file must not be checked into the repository. To prevent
 accidental check-ins, `config.js` is in `.gitignore`.
 
-Run `yarn migrate --network NETWORK`, where NETWORK is either `mainnet` or
-`ropsten`.
+Run `yarn migrate --network NETWORK`, where NETWORK is either `mainnet`, `goerli` or `ropsten`.
 
 ## Contracts
 
