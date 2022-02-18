@@ -14,14 +14,14 @@ let pauserAddress = "";
 let blacklisterAddress = "";
 
 // Read config file if it exists
-if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
+if (fs.existsSync(path.join(__dirname, "..", "..", "config.js"))) {
   ({
     PROXY_ADMIN_ADDRESS: proxyAdminAddress,
     OWNER_ADDRESS: ownerAddress,
     MASTERMINTER_ADDRESS: masterMinterAddress,
     PAUSER_ADDRESS: pauserAddress,
     BLACKLISTER_ADDRESS: blacklisterAddress,
-  } = require("../config.js"));
+  } = require("../../config.js"));
 }
 
 module.exports = async (deployer, network) => {

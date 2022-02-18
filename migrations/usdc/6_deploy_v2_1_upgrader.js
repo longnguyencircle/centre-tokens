@@ -11,12 +11,12 @@ let proxyContractAddress = "";
 let lostAndFoundAddress = "";
 
 // Read config file if it exists
-if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
+if (fs.existsSync(path.join(__dirname, "..", "..", "config.js"))) {
   ({
     PROXY_ADMIN_ADDRESS: proxyAdminAddress,
     PROXY_CONTRACT_ADDRESS: proxyContractAddress,
     LOST_AND_FOUND_ADDRESS: lostAndFoundAddress,
-  } = require("../config.js"));
+  } = require("../../config.js"));
 }
 
 module.exports = async (deployer, network) => {

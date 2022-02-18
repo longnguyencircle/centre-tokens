@@ -6,11 +6,11 @@ let masterMinterAddress = "";
 let fiatTokenAddress = "";
 
 // Read config file if it exists
-if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
+if (fs.existsSync(path.join(__dirname, "..", "..", "config.js"))) {
   ({
     MASTERMINTER_ADDRESS: masterMinterAddress,
     PROXY_CONTRACT_ADDRESS: fiatTokenAddress,
-  } = require("../config.js"));
+  } = require("../../config.js"));
 }
 
 module.exports = function (deployer, network) {

@@ -73,11 +73,27 @@ $ yarn coverage
 
 Create a copy of the file `config.js.example`, and name it `config.js`. Enter
 the BIP39 mnemonic phrase, the INFURA API key to use for deployment, and the
-addresses of proxy admin, owner, master minter, blacklister, and pauser in
+addresses of proxy admin, owner, master minter owner, blacklister, and pauser in
 `config.js`. This file must not be checked into the repository. To prevent
 accidental check-ins, `config.js` is in `.gitignore`.
 
-Run `yarn migrate --network NETWORK`, where NETWORK is either `mainnet`, `goerli` or `ropsten`.
+`FIAT_TOKEN_IMPLEMENTATION_ADDRESS` config value can also (optionally) be set.
+If it is set, we don't deploy a new FiatToken implementation contract, just a
+new proxy contract and point it to the given address.
+
+To deploy a new FiatToken contract:
+
+- Add the following fields (explained above) in `config.js`:
+  - `INFURA_KEY`, `MNEMONIC`
+  - `PROXY_ADMIN_ADDRESS`, `OWNER_ADDRESS`, `MASTERMINTER_OWNER_ADDRESS`,
+    `PAUSER_ADDRESS`, `BLACKLISTER_ADDRESS`, `LOST_AND_FOUND_ADDRESS`,
+  - `FIAT_TOKEN_IMPLEMENTATION_ADDRESS` (optional)
+  - `TOKEN_NAME`, `TOKEN_SYMBOL`, and `TOKEN_CURRENCY`.
+- Run `yarn migrate --network {development, goerli, ropsten, mainnet}`.
+
+_Note: Combined migrations are run by default. To run the original USDC
+migrations (deploying each FiatToken version separately) set the
+`USE_USDC_MIGRATIONS` config value to `true`._
 
 ## Contracts
 

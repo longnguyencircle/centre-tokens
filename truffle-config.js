@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Read config file if it exists
-let config = { MNEMONIC: "", INFURA_KEY: "" };
+let config = { MNEMONIC: "", INFURA_KEY: "", USE_USDC_MIGRATIONS: "" };
 if (fs.existsSync(path.join(__dirname, "config.js"))) {
   config = require("./config.js");
 }
@@ -54,6 +54,10 @@ module.exports = {
     reporter: "Spec",
   },
   plugins: ["solidity-coverage"],
+  // Use default directory if false
+  migrations_directory: config.USE_USDC_MIGRATIONS
+    ? "./migrations/usdc"
+    : undefined,
 };
 
 function infuraProvider(network) {
