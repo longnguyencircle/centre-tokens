@@ -19,7 +19,11 @@
     "solhint": "solhint 'contracts/**/*.sol'",
     "precommit": "yarn typechain && yarn fmt && yarn typecheck && yarn lint && yarn solhint",
     "slither": "slither --solc-disable-warnings --disable-color --exclude-dependencies .",
-    "migrate": "truffle migrate --interactive"
+    "clean": "truffle networks --clean",
+    "deployContracts": "truffle migrate --interactive --to 2",
+    "minters": "truffle migrate --interactive -f 3 --to 3",
+    "coldStorage": "truffle migrate --interactive -f 4",
+    "verify": "truffle run verify FiatTokenProxy FiatTokenV2_1 MasterMinter"
   },
   "repository": {
     "type": "git",
@@ -32,10 +36,13 @@
     "url": "https://github.com/centrehq/centre-tokens/issues"
   },
   "homepage": "https://github.com/centrehq/centre-tokens#readme",
-  "dependencies": {},
+  "dependencies": {
+    "bip39": "^3.0.4",
+    "yarn": "^1.22.18"
+  },
   "devDependencies": {
     "@openzeppelin/contracts": "^3.1.0",
-    "@truffle/hdwallet-provider": "^1.0.39",
+    "@truffle/hdwallet-provider": "^1.5.0",
     "@typechain/truffle-v5": "^2.0.2",
     "@types/chai": "^4.2.11",
     "@types/lodash": "^4.14.158",
@@ -56,6 +63,7 @@
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-tx": "^2.1.2",
     "ethereumjs-util": "^7.0.3",
+    "ethereumjs-wallet": "0.6.5",
     "ganache-cli": "^6.12.2",
     "googleapis": "^55.0.0",
     "lodash": "^4.17.19",
@@ -66,6 +74,7 @@
     "solhint": "^3.1.0",
     "solidity-coverage": "^0.7.9",
     "truffle": "^5.1.35",
+    "truffle-plugin-verify": "^0.5.25",
     "ts-node": "^8.10.2",
     "typechain": "^2.0.0",
     "typescript": "^3.9.7",

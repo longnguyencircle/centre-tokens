@@ -1,35 +1,79 @@
 module.exports = {
-  // BIP39 mnemonic phrase
-  MNEMONIC: "",
-  // INFURA API key
-  INFURA_KEY: "",
-  // FiatTokenProxy admin - can upgrade implementation contract
-  PROXY_ADMIN_ADDRESS: "",
-  // Owner - can configure master minter, pauser, and blacklister
-  OWNER_ADDRESS: "",
-  // Master Minter Owner - Owner of MasterMinter contract
-  MASTERMINTER_OWNER_ADDRESS: "",
-  // Pauser - can pause the contract
-  PAUSER_ADDRESS: "",
-  // Blacklister - can blacklist addresses
-  BLACKLISTER_ADDRESS: "",
-  // FiatTokenProxy contract - override the contract address used in migrations
-  PROXY_CONTRACT_ADDRESS: "",
-  // LostAndFound - tokens that were locked in the contract are sent to this
-  LOST_AND_FOUND_ADDRESS: "",
-  // FiatTokenImplementationAddress - (optional) if given for non-usdc migrations we don't deploy FiatToken, just the proxy
-  FIAT_TOKEN_IMPLEMENTATION_ADDRESS: "",
-  // Master Minter - can configure minters and minter allowance -- only used in usdc migrations
-  MASTERMINTER_ADDRESS: "",
-  // TokenName - Name of the token e.g. "USD Coin"
-  TOKEN_NAME: "",
+
+  // ***** CONFIGURATION *********
+
+  // these API keys are used to verify contracts
+  // see truffle-config.js for more context
+  ETHERSCAN_API_KEY: "",
+  ARBISCAN_API_KEY: "",
+  OPTIMISTIC_ETHERSCAN_API_KEY: "",
+
+  LOCAL_RPC_URL: "",
+  TESTNET_RPC_URL: "",
+  MAINNET_RPC_URL: "",
+
+  MAINNET_ID: "",
+  TESTNET_ID: "",
+
+  TOKEN_NAME: "USD Coin",
   // TokenSymbol - Symbol of the token e.g. "USDC"
-  TOKEN_SYMBOL: "",
+  TOKEN_SYMBOL: "USDC",
   // TokenCurrency - Currency of the token e.g. "USD"
-  TOKEN_CURRENCY: "",
+  TOKEN_CURRENCY: "USD",
   // TokenDecimals - Number of decimals for the token e.g. 6
   TOKEN_DECIMALS: 6,
   // USE_USDC_MIGRATIONS - whether or not to use legacy migrations in migrations/usdc directory.
   // These migrations deploy each version of FiatToken separately.
-  USE_USDC_MIGRATIONS: true,
+  USE_USDC_MIGRATIONS: false,
+
+  // FiatTokenImplementationAddress - (optional) if given for non-usdc migrations we don't deploy FiatToken, just the proxy
+  // FIAT_TOKEN_IMPLEMENTATION_ADDRESS: "",
+  // FiatTokenProxy contract - override the contract address used in migrations
+  // PROXY_CONTRACT_ADDRESS: "",
+
+  // ***** DEPLOYER HOT KEYS *********
+
+  DEPLOYER_ADDRESS: "",
+  DEPLOYER_PRIVATE_KEY: "",
+
+  MASTERMINTER_OWNER_ADDRESS: "",
+  MASTERMINTER_OWNER_PRIVATE_KEY: "",
+
+  PROXY_ADMIN_ADDRESS: "",
+  PROXY_ADMIN_PRIVATE_KEY: "",
+
+  OWNER_ADDRESS: "",
+  OWNER_PRIVATE_KEY: "",
+
+  // ***** MINTER SETUP *********
+
+  MINTER_PROD: "",
+  MINTER_STG: "",
+  BURNER_PROD: "",
+  BURNER_STG: "",
+
+  // 115792089237316195423570985008687907853269984665640564039457584007 for testnet minter
+  MINT_ALLOWANCE_UNITS_PROD: 25000000,
+  MINT_ALLOWANCE_UNITS_STG: 25000,
+
+  // ***** COLD STORAGE *********
+
+  MINTER_STG_CONTROLLER_INCREMENTER: "",
+  MINTER_STG_CONTROLLER_REMOVER: "",
+  BURNER_STG_CONTROLLER: "",
+
+  MINTER_PROD_CONTROLLER_INCREMENTER: "",
+  MINTER_PROD_CONTROLLER_REMOVER: "",
+  BURNER_PROD_CONTROLLER: "",
+
+  // Pauser - can pause the contract
+  COLD_PAUSER_ADDRESS: "",
+  // Blacklister - can blacklist addresses
+  COLD_BLACKLISTER_ADDRESS: "",
+  // LostAndFound - tokens that were locked in the contract are sent to this
+  COLD_LOST_AND_FOUND_ADDRESS: "",
+  COLD_MASTERMINTER_OWNER_ADDRESS: "",
+  COLD_PROXY_ADMIN_ADDRESS: "",
+  // Owner - can configure master minter, pauser, and blacklister
+  COLD_OWNER_ADDRESS: "",
 };

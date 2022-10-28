@@ -6,16 +6,42 @@ Fiat tokens on the [CENTRE](https://centre.io) network.
 
 Requirements:
 
-- Node >= v12
+- Node 16.14.0
 - Yarn
 
 ```
 $ git clone git@github.com:centrehq/centre-tokens.git
 $ cd centre-tokens
+$ nvm use 16.14.0
 $ npm i -g yarn       # Install yarn if you don't already have it
 $ yarn install        # Install dependencies
-$ yarn setup          # Setup Git hooks
 ```
+
+## Deployment
+
+You will need 4 different hot keys (deployer, proxy admin, master minter, owner), and they should be funded (with 0.5-1 ETH) to pay for tx's.
+You can use ./scripts/create-account.js to create the keys
+
+Create a copy of the file `config.js.example`, and name it `config.js`. 
+Fill in the empty values.  
+This file must not be checked into the repository. To prevent
+accidental check-ins, `config.js` is in `.gitignore`.
+
+```
+yarn deployContracts --network {development, testnet, mainnet}
+
+// ensure PROXY_CONTRACT_ADDRESS and MINT_ALLOWANCE_UNITS_PROD/STG 
+// are properly set in config.js 
+yarn minters --network {development, testnet, mainnet}
+
+// only needed for mainnet
+yarn coldStorage --network {development, testnet, mainnet}
+
+yarn verify --network {see here https://www.npmjs.com/package/truffle-plugin-verify}
+```
+
+**Remember to save the config.js file in 1PW Wallets Org** 
+- include the deployed contract addresses in the config file.
 
 ## TypeScript type definition files for the contracts
 
@@ -68,32 +94,6 @@ To run tests and generate test coverage, run:
 ```
 $ yarn coverage
 ```
-
-## Deployment
-
-Create a copy of the file `config.js.example`, and name it `config.js`. Enter
-the BIP39 mnemonic phrase, the INFURA API key to use for deployment, and the
-addresses of proxy admin, owner, master minter owner, blacklister, and pauser in
-`config.js`. This file must not be checked into the repository. To prevent
-accidental check-ins, `config.js` is in `.gitignore`.
-
-`FIAT_TOKEN_IMPLEMENTATION_ADDRESS` config value can also (optionally) be set.
-If it is set, we don't deploy a new FiatToken implementation contract, just a
-new proxy contract and point it to the given address.
-
-To deploy a new FiatToken contract:
-
-- Add the following fields (explained above) in `config.js`:
-  - `INFURA_KEY`, `MNEMONIC`
-  - `PROXY_ADMIN_ADDRESS`, `OWNER_ADDRESS`, `MASTERMINTER_OWNER_ADDRESS`,
-    `PAUSER_ADDRESS`, `BLACKLISTER_ADDRESS`, `LOST_AND_FOUND_ADDRESS`,
-  - `FIAT_TOKEN_IMPLEMENTATION_ADDRESS` (optional)
-  - `TOKEN_NAME`, `TOKEN_SYMBOL`, and `TOKEN_CURRENCY`.
-- Run `yarn migrate --network {development, goerli, ropsten, mainnet}`.
-
-_Note: Combined migrations are run by default. To run the original USDC
-migrations (deploying each FiatToken version separately) set the
-`USE_USDC_MIGRATIONS` config value to `true`._
 
 ## Contracts
 

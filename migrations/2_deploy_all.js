@@ -24,9 +24,9 @@ if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
   ({
     PROXY_ADMIN_ADDRESS: proxyAdminAddress,
     OWNER_ADDRESS: ownerAddress,
-    PAUSER_ADDRESS: pauserAddress,
-    BLACKLISTER_ADDRESS: blacklisterAddress,
-    LOST_AND_FOUND_ADDRESS: lostAndFoundAddress,
+    COLD_PAUSER_ADDRESS: pauserAddress,
+    COLD_BLACKLISTER_ADDRESS: blacklisterAddress,
+    COLD_LOST_AND_FOUND_ADDRESS: lostAndFoundAddress,
     MASTERMINTER_OWNER_ADDRESS: masterMinterOwnerAddress,
     FIAT_TOKEN_IMPLEMENTATION_ADDRESS: fiatTokenImplementationAddress,
     TOKEN_NAME: tokenName,
@@ -45,35 +45,47 @@ if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
  * the master minter, but we can't initialize the proxy until we have the master minter deployed.
  */
 
-module.exports = async (deployer) => {
+module.exports = async (deployer, network) => {
+  if (
+      !proxyAdminAddress ||
+      !ownerAddress ||
+      !masterMinterOwnerAddress
+  ) {
+    throw new Error(
+        "PROXY_ADMIN_ADDRESS, OWNER_ADDRESS, and MASTERMINTER_OWNER_ADDRESS must be provided in config.js"
+    );
+  }
+
+  if (
+      !pauserAddress ||
+      !blacklisterAddress ||
+      !lostAndFoundAddress
+  ) {
+    if (network === "mainnet") {
+      throw new Error(
+          "PAUSER_ADDRESS, BLACKLISTER_ADDRESS and LOST_AND_FOUND_ADDRESS must be provided in config.js"
+      );
+    } else {
+      pauserAddress = proxyAdminAddress;
+      blacklisterAddress = proxyAdminAddress;
+      lostAndFoundAddress = proxyAdminAddress;
+    }
+  }
+
   console.log(`Proxy Admin:         ${proxyAdminAddress}`);
   console.log(`Owner:               ${ownerAddress}`);
   console.log(`Pauser:              ${pauserAddress}`);
   console.log(`Blacklister:         ${blacklisterAddress}`);
   console.log(`Lost and Found:      ${lostAndFoundAddress}`);
   console.log(`Master Minter Owner: ${masterMinterOwnerAddress}`);
-  console.log(
-    `FiatTokenV2_1ImplementationAddress: ${fiatTokenImplementationAddress}`
-  );
+  console.log(`FiatTokenV2_1ImplementationAddress: ${fiatTokenImplementationAddress}`);
 
-  if (
-    !proxyAdminAddress ||
-    !ownerAddress ||
-    !pauserAddress ||
-    !blacklisterAddress ||
-    !lostAndFoundAddress ||
-    !masterMinterOwnerAddress
-  ) {
-    throw new Error(
-      "PROXY_ADMIN_ADDRESS, OWNER_ADDRESS, PAUSER_ADDRESS, BLACKLISTER_ADDRESS, LOST_AND_FOUND_ADDRESS, and MASTERMINTER_OWNER_ADDRESS must be provided in config.js"
-    );
-  }
-
-  // We don't need to deploy the FiatTokenV2_1 implementation contract on testnet/mainnet because we can just use the
-  // existing USDC implementation contract and point the newly deployed proxy contract to it.
+  // If there is an existing USDC implementation contract,
+  // we can simply point the newly deployed proxy contract to it.
   if (!fiatTokenImplementationAddress) {
+
     console.log("Deploying implementation contract...");
-    await deployer.deploy(FiatTokenV2_1);
+    await deployer.deploy(FiatTokenV2_1, { gas: 20000000 });
     const fiatTokenV2_1 = await FiatTokenV2_1.deployed();
     console.log("Deployed implementation contract at", FiatTokenV2_1.address);
 
@@ -125,7 +137,7 @@ module.exports = async (deployer) => {
     tokenSymbol,
     tokenCurrency,
     tokenDecimals,
-    MasterMinter.address,
+    masterMinterOwnerAddress,
     pauserAddress,
     blacklisterAddress,
     ownerAddress
@@ -139,5 +151,5 @@ module.exports = async (deployer) => {
   console.log("Initializing V2.1...");
   await proxyAsV2_1.initializeV2_1(lostAndFoundAddress);
 
-  console.log("Deployment finished");
+  console.log("Deployment step 2 finished");
 };
