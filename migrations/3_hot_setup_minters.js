@@ -25,31 +25,30 @@ if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
   } = require("../config.js"));
 }
 
-// configure some minters before converting to cold storage
+// Configure some minters with hot keys before converting to cold storage
+// to avoid needing a run to even get our products started.
 module.exports = async function (deployer, network, accounts) {
-  console.log(`>>>>>>> Configuring Known Minters And Burners <<<<<<<`);
+  console.log(`>>>>>>> Configuring Known Minters and Burners <<<<<<<`);
 
   proxyContractAddress =
     proxyContractAddress || (await FiatTokenProxy.deployed()).address;
 
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
+  const masterMinterOwnerPrivateKey = accounts[1];
+
+  const mintAllowanceStg = new BigNumber(mintAllowanceUnitsStg).shiftedBy(6);
+  await proxyAsV2_1.configureMinter(minterStg, mintAllowanceStg, {
+    from: masterMinterOwnerPrivateKey,
+  });
+  await proxyAsV2_1.configureMinter(burnerStg, 0, {
+    from: masterMinterOwnerPrivateKey,
+  });
 
   const mintAllowanceProd = new BigNumber(mintAllowanceUnitsProd).shiftedBy(6);
-  const mintAllowanceStg = new BigNumber(mintAllowanceUnitsStg).shiftedBy(6);
-
   await proxyAsV2_1.configureMinter(minterProd, mintAllowanceProd, {
-    from: accounts[1],
+    from: masterMinterOwnerPrivateKey,
   });
-
-  await proxyAsV2_1.configureMinter(minterStg, mintAllowanceStg, {
-    from: accounts[1],
-  });
-
   await proxyAsV2_1.configureMinter(burnerProd, 0, {
-    from: accounts[1],
-  });
-
-  await proxyAsV2_1.configureMinter(burnerStg, 0, {
-    from: accounts[1],
+    from: masterMinterOwnerPrivateKey,
   });
 };

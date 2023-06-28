@@ -37,30 +37,36 @@ module.exports = async function (deployer, network, accounts) {
   proxyContractAddress =
     proxyContractAddress || (await FiatTokenProxy.deployed()).address;
 
+  const ownerPrivateKey = accounts[3];
+
   // upgrade master minter on token to master minter contract address
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
   await proxyAsV2_1.updateMasterMinter(masterMinterContractAddress, {
-    from: accounts[3],
+    from: ownerPrivateKey,
   });
   console.log(
     `Reassigned master minter on token to the master minter contract address`
   );
 
   await proxyAsV2_1.transferOwnership(coldOwnerAddress, {
-    from: accounts[3],
+    from: ownerPrivateKey,
   });
   console.log(`Reassigned token owner to cold storage`);
 
   // reassign proxy admin to cold storage
   const proxyContract = await FiatTokenProxy.at(proxyContractAddress);
-  await proxyContract.changeAdmin(coldProxyAdminAddress, { from: accounts[2] });
+  const proxyAdminPrivateKey = accounts[2];
+  await proxyContract.changeAdmin(coldProxyAdminAddress, {
+    from: proxyAdminPrivateKey,
+  });
 
   console.log(`Reassigned proxy admin to cold storage`);
 
   // reassign master minter to cold storage
   const masterMinter = await MasterMinter.at(masterMinterContractAddress);
+  const masterMinterOwnerPrivateKey = accounts[1];
   await masterMinter.transferOwnership(coldMasterMinterAddress, {
-    from: accounts[1],
+    from: masterMinterOwnerPrivateKey,
   });
 
   console.log(`Reassigned master minter to cold storage`);
