@@ -19,28 +19,36 @@ $ yarn install        # Install dependencies
 
 ## Deployment
 
-You will need 4 different hot keys (deployer, proxy admin, master minter, owner), and they should be funded (with 0.5-1 ETH) to pay for tx's.
-You can use ./scripts/create-account.js to create the keys
+You will need 5 different hot keys (blacklister, deployer, master minter, owner,
+and proxy admin), and they should be funded (with 0.5-1 ETH) to pay for
+transactions. You can use ./scripts/create-account.js to create the keys.
 
-Create a copy of the file `config.js.example`, and name it `config.js`. 
-Fill in the empty values.  
-This file must not be checked into the repository. To prevent
-accidental check-ins, `config.js` is in `.gitignore`.
+Create a copy of the file `config.js.example`, and name it `config.js`. Fill in
+the empty values. This file must not be checked into the repository. To prevent
+accidental check-ins, `config.js` and `blacklist.txt` are in `.gitignore`.
+
+For mainnet, be sure to have a specified `blacklist.txt` file with a sanctions
+list from Compliance. As seen in `blacklist.txt.example`, addresses are split by
+new lines. You must blacklist the sanctions list at deployment time using the
+hot blacklister key (in `config.js`).
 
 ```
 yarn deployContracts --network {development, testnet, mainnet}
+yarn blacklistSeed --network development
 
-// ensure PROXY_CONTRACT_ADDRESS and MINT_ALLOWANCE_UNITS_PROD/STG 
-// are properly set in config.js 
+// Ensure that PROXY_CONTRACT_ADDRESS and MINT_ALLOWANCE_UNITS_PROD/STG
+// are properly set in config.js.
 yarn minters --network {development, testnet, mainnet}
 
-// only needed for mainnet
+// Only needed for mainnet, but feel free to simulate a local run on the dev network.
+// This will move all five hot keys to cold.
 yarn coldStorage --network {development, testnet, mainnet}
 
 yarn verify --network {see here https://www.npmjs.com/package/truffle-plugin-verify}
 ```
 
-**Remember to save the config.js file in 1PW Wallets Org** 
+**Remember to save the config.js file in 1PW Wallets Org**
+
 - include the deployed contract addresses in the config file.
 
 ## TypeScript type definition files for the contracts

@@ -26,7 +26,7 @@ if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
 }
 
 // Prints out current roles on important contracts, for validation
-module.exports = async function () {
+module.exports = async function (_) {
   proxyContractAddress =
     proxyContractAddress || (await FiatTokenProxy.deployed()).address;
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
@@ -44,12 +44,12 @@ module.exports = async function () {
   const pauserRole = await proxyAsV2_1.pauser();
 
   console.log(`>>>>>>> Validate the following roles are as expected: <<<<<<<`);
-  console.log(`Token Owner: ${tokenOwner}`);
-  console.log(`Proxy Admin: ${proxyAdmin}`);
-  console.log(`MasterMinter Owner:  ${masterMinterOwner}`);
-  console.log(`MasterMinter Role: ${masterMinterRole}`);
-  console.log(`Blacklister Role: ${blacklisterRole}`);
-  console.log(`Pauser Role:  ${pauserRole}`);
+  console.log(`Token Owner:        ${tokenOwner}`);
+  console.log(`Proxy Admin:        ${proxyAdmin}`);
+  console.log(`MasterMinter Owner: ${masterMinterOwner}`);
+  console.log(`MasterMinter Role:  ${masterMinterRole}`);
+  console.log(`Blacklister Role:   ${blacklisterRole}`);
+  console.log(`Pauser Role:        ${pauserRole}`);
 
   const minterProdAllowance = new BigNumber(
     await proxyAsV2_1.minterAllowance(minterProd)
@@ -65,10 +65,10 @@ module.exports = async function () {
   ).shiftedBy(-6);
 
   console.log(
-    `>>>>>>> Validate the minter/burner allowances (in major units) are as expected: <<<<<<<`
+    `\n>>>>>>> Validate the minter/burner allowances (in major units) are as expected: <<<<<<<`
   );
-  console.log(`Minter Prod:  ${minterProdAllowance}`);
+  console.log(`Minter Prod: ${minterProdAllowance}`);
   console.log(`Minter Stg:  ${minterStgAllowance}`);
-  console.log(`Burner Prod:  ${burnerProdAllowance}`);
+  console.log(`Burner Prod: ${burnerProdAllowance}`);
   console.log(`Burner Stg:  ${burnerStgAllowance}`);
 };

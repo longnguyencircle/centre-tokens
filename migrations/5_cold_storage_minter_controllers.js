@@ -39,12 +39,13 @@ module.exports = async function (deployer, network, accounts) {
   masterMinterContractAddress =
     masterMinterContractAddress || (await MasterMinter.deployed()).address;
   const masterMinter = await MasterMinter.at(masterMinterContractAddress);
+  const masterMinterOwnerPrivateKey = accounts[1];
 
   await masterMinter.configureController(
     minterProdControllerIncrementer,
     minterProd,
     {
-      from: accounts[1],
+      from: masterMinterOwnerPrivateKey,
     }
   );
 
@@ -52,19 +53,19 @@ module.exports = async function (deployer, network, accounts) {
     minterProdControllerRemover,
     minterProd,
     {
-      from: accounts[1],
+      from: masterMinterOwnerPrivateKey,
     }
   );
 
   await masterMinter.configureController(burnerProdController, burnerProd, {
-    from: accounts[1],
+    from: masterMinterOwnerPrivateKey,
   });
 
   await masterMinter.configureController(
     minterStgControllerIncrementer,
     minterStg,
     {
-      from: accounts[1],
+      from: masterMinterOwnerPrivateKey,
     }
   );
 
@@ -72,12 +73,12 @@ module.exports = async function (deployer, network, accounts) {
     minterStgControllerRemover,
     minterStg,
     {
-      from: accounts[1],
+      from: masterMinterOwnerPrivateKey,
     }
   );
 
   await masterMinter.configureController(burnerStgController, burnerStg, {
-    from: accounts[1],
+    from: masterMinterOwnerPrivateKey,
   });
 
   console.log(`>>>>>>> The following controllers are now configured: <<<<<<<`);

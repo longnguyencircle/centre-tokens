@@ -9,6 +9,7 @@ const path = require("path");
 
 // Read config file if it exists
 let config = {
+  BLACKLISTER_PRIVATE_KEY: "",
   DEPLOYER_PRIVATE_KEY: "",
   MASTERMINTER_OWNER_PRIVATE_KEY: "",
   OWNER_PRIVATE_KEY: "",
@@ -87,6 +88,7 @@ function rpcProvider(network) {
         config.MASTERMINTER_OWNER_PRIVATE_KEY,
         config.PROXY_ADMIN_PRIVATE_KEY,
         config.OWNER_PRIVATE_KEY,
+        config.BLACKLISTER_PRIVATE_KEY,
       ],
       providerOrUrl: network,
     });
