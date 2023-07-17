@@ -34,21 +34,21 @@ module.exports = async function (deployer, network, accounts) {
     proxyContractAddress || (await FiatTokenProxy.deployed()).address;
 
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
-  const masterMinterOwnerPrivateKey = accounts[1];
+  const masterMinterAddress = accounts[1];
 
   const mintAllowanceStg = new BigNumber(mintAllowanceUnitsStg).shiftedBy(6);
   await proxyAsV2_1.configureMinter(minterStg, mintAllowanceStg, {
-    from: masterMinterOwnerPrivateKey,
+    from: masterMinterAddress,
   });
   await proxyAsV2_1.configureMinter(burnerStg, 0, {
-    from: masterMinterOwnerPrivateKey,
+    from: masterMinterAddress,
   });
 
   const mintAllowanceProd = new BigNumber(mintAllowanceUnitsProd).shiftedBy(6);
   await proxyAsV2_1.configureMinter(minterProd, mintAllowanceProd, {
-    from: masterMinterOwnerPrivateKey,
+    from: masterMinterAddress,
   });
   await proxyAsV2_1.configureMinter(burnerProd, 0, {
-    from: masterMinterOwnerPrivateKey,
+    from: masterMinterAddress,
   });
 };

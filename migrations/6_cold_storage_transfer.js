@@ -39,9 +39,9 @@ module.exports = async function (deployer, network, accounts) {
   }
 
   // Hot private keys used for reassignment.
-  const masterMinterOwnerPrivateKey = accounts[1];
-  const proxyAdminPrivateKey = accounts[2];
-  const ownerPrivateKey = accounts[3];
+  const masterMinterOwnerAddress = accounts[1];
+  const proxyAdminAddress = accounts[2];
+  const ownerAddress = accounts[3];
 
   console.log(`>>>>>>> Reassigning ownership to cold storage <<<<<<<`);
 
@@ -53,7 +53,7 @@ module.exports = async function (deployer, network, accounts) {
   // Migrate master minter on token to master minter contract.
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
   await proxyAsV2_1.updateMasterMinter(masterMinterContractAddress, {
-    from: ownerPrivateKey,
+    from: ownerAddress,
   });
   console.log(
     `Reassigned token master minter to the master minter contract ${masterMinterContractAddress}.`
@@ -62,7 +62,7 @@ module.exports = async function (deployer, network, accounts) {
   // Reassign master minter contract's owner to cold owner.
   const masterMinter = await MasterMinter.at(masterMinterContractAddress);
   await masterMinter.transferOwnership(coldMasterMinterAddress, {
-    from: masterMinterOwnerPrivateKey,
+    from: masterMinterOwnerAddress,
   });
   console.log(
     `Reassigned master minter contract owner to cold owner ${coldMasterMinterAddress}.`
@@ -71,7 +71,7 @@ module.exports = async function (deployer, network, accounts) {
   // Reassign proxy admin to cold storage.
   const proxyContract = await FiatTokenProxy.at(proxyContractAddress);
   await proxyContract.changeAdmin(coldProxyAdminAddress, {
-    from: proxyAdminPrivateKey,
+    from: proxyAdminAddress,
   });
   console.log(
     `Reassigned proxy contract admin to cold admin ${coldProxyAdminAddress}.`
@@ -81,7 +81,7 @@ module.exports = async function (deployer, network, accounts) {
   // Blacklistable.sol#updateBlacklister onlyOwner
   // We must do this while we have the hot owner key before we reassign the token owner below.
   await proxyAsV2_1.updateBlacklister(coldBlacklisterAddress, {
-    from: ownerPrivateKey,
+    from: ownerAddress,
   });
   console.log(
     `Reassigned token blacklister to cold blacklister ${coldBlacklisterAddress}.`
@@ -89,7 +89,7 @@ module.exports = async function (deployer, network, accounts) {
 
   // Reassign the token owner.
   await proxyAsV2_1.transferOwnership(coldOwnerAddress, {
-    from: ownerPrivateKey,
+    from: ownerAddress,
   });
   console.log(
     `Reassigned token owner to cold storage owner ${coldOwnerAddress}.`

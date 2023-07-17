@@ -7,6 +7,7 @@ module.exports = {
   ETHERSCAN_API_KEY: "",
   ARBISCAN_API_KEY: "",
   OPTIMISTIC_ETHERSCAN_API_KEY: "",
+  POLYGONSCAN_API_KEY: "",
 
   LOCAL_RPC_URL: "",
   TESTNET_RPC_URL: "",

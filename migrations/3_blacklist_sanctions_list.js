@@ -8,19 +8,19 @@ const configFileResolved = path.join(__dirname, "..", `${configFile}`);
 const blacklistFile = "blacklist.txt";
 const blacklistFileResolved = path.join(__dirname, "..", `${blacklistFile}`);
 
-let blacklisterAddress = "";
+let blacklisterPrivateKey = "";
 let proxyContractAddress = "";
 
 // Attempt to fetch the values needed for blacklisting.
 if (fs.existsSync(configFileResolved)) {
   ({
-    BLACKLISTER_ADDRESS: blacklisterAddress,
+    BLACKLISTER_PRIVATE_KEY: blacklisterPrivateKey, // This is used in HDWallet setup in truffle-config.js
     PROXY_CONTRACT_ADDRESS: proxyContractAddress,
   } = require(`../${configFile}`));
 }
-if (!blacklisterAddress || !proxyContractAddress) {
+if (!blacklisterPrivateKey || !proxyContractAddress) {
   throw new Error(
-    "BLACKLISTER_ADDRESS (with its private key) & PROXY_CONTRACT_ADDRESS must be provided in config.js for blacklisting!"
+    "BLACKLISTER_PRIVATE_KEY & PROXY_CONTRACT_ADDRESS must be provided in config.js for blacklisting!"
   );
 }
 
@@ -44,7 +44,7 @@ if (!fs.existsSync(blacklistFileResolved)) {
  */
 module.exports = async function (deployer, network, accounts) {
   const proxyAsV2_1 = await FiatTokenV2_1.at(proxyContractAddress);
-  const blacklisterPrivateKey = accounts[4]; // truffle-config.js, HDWalletProvider
+  const blacklisterAddress = accounts[4]; // truffle-config.js, HDWalletProvider
 
   console.log(
     "Blacklisting the following addresses using blacklister address",
@@ -57,7 +57,7 @@ module.exports = async function (deployer, network, accounts) {
   for (const addr of addressesToBlacklist) {
     if (addr) {
       await proxyAsV2_1.blacklist(addr, {
-        from: blacklisterPrivateKey,
+        from: blacklisterAddress,
       });
       // Log confirmation of this address being blacklisted.
       console.log(addr, await proxyAsV2_1.isBlacklisted(addr));

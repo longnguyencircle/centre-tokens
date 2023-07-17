@@ -19,6 +19,9 @@ $ yarn install        # Install dependencies
 
 ## Deployment
 
+The deployment process is detailed on
+[Confluence](https://circlepay.atlassian.net/wiki/spaces/ENGINEERIN/pages/721256540/Deploying+FiatToken+ERC-20+contracts).
+
 You will need 5 different hot keys (blacklister, deployer, master minter, owner,
 and proxy admin), and they should be funded (with 0.5-1 ETH) to pay for
 transactions. You can use ./scripts/create-account.js to create the keys.
@@ -36,6 +39,8 @@ hot blacklister key (in `config.js`).
 yarn deployContracts --network {development, testnet, mainnet}
 yarn blacklistSeed --network development
 
+// When you deploy the contract for the first time, it will give you address for the FiatToken Proxy
+// which you can use as the PROXY_CONTRACT_ADDRESS
 // Ensure that PROXY_CONTRACT_ADDRESS and MINT_ALLOWANCE_UNITS_PROD/STG
 // are properly set in config.js.
 yarn minters --network {development, testnet, mainnet}
@@ -46,6 +51,9 @@ yarn coldStorage --network {development, testnet, mainnet}
 
 yarn verify --network {see here https://www.npmjs.com/package/truffle-plugin-verify}
 ```
+
+> Note that you may need to update truffle-config.js to have a verify attribute for the network you're testing.
+> See [Confluence](https://circlepay.atlassian.net/wiki/spaces/ENGINEERIN/pages/721256540/Deploying+FiatToken+ERC-20+contracts) for details.
 
 **Remember to save the config.js file in 1PW Wallets Org**
 
