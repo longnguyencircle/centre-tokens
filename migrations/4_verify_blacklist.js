@@ -1,7 +1,9 @@
-/**
+/*
  * Use this script to verify that the proxy contract has all items it should blacklist
  *  Make sure your config.js file has the PROXY_CONTRACT_ADDRESS set and the
- *  blacklist.txt file filled
+ *  blacklist.txt file filled.
+ *
+ * The script is read-only
  */
 
 const fs = require("fs");
