@@ -4,9 +4,9 @@ const path = require("path");
 const FiatTokenV2_1 = artifacts.require("FiatTokenV2_1");
 
 const configFile = "config.js";
-const configFileResolved = path.join(__dirname, "..", `${configFile}`);
+const configFileResolved = path.join(__dirname, "..", configFile);
 const blacklistFile = "blacklist.txt";
-const blacklistFileResolved = path.join(__dirname, "..", `${blacklistFile}`);
+const blacklistFileResolved = path.join(__dirname, "..", blacklistFile);
 
 let blacklisterPrivateKey = "";
 let proxyContractAddress = "";

@@ -15,9 +15,9 @@ const FiatTokenV2_1 = artifacts.require("FiatTokenV2_1");
 let proxyContractAddress = "";
 
 const configFile = "config.js";
-const configFileResolved = path.join(__dirname, "..", `${configFile}`);
+const configFileResolved = path.join(__dirname, "..", configFile);
 const blacklistFile = "blacklist.txt";
-const blacklistFileResolved = path.join(__dirname, "..", `${blacklistFile}`);
+const blacklistFileResolved = path.join(__dirname, "..", blacklistFile);
 
 // Attempt to fetch the values needed for blacklisting.
 if (fs.existsSync(configFileResolved)) {
