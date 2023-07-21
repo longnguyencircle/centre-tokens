@@ -2,38 +2,35 @@ const fs = require("fs");
 const path = require("path");
 const MasterMinter = artifacts.require("MasterMinter.sol");
 
+let env = "";
 let masterMinterContractAddress = "";
-let minterProd = "";
-let minterStg = "";
-let burnerProd = "";
-let burnerStg = "";
-let minterStgControllerIncrementer = "";
-let minterStgControllerRemover = "";
-let burnerStgController = "";
-let minterProdControllerIncrementer = "";
-let minterProdControllerRemover = "";
-let burnerProdController = "";
+let minter = "";
+let burner = "";
+let minterControllerIncrementer = "";
+let minterControllerRemover = "";
+let burnerController = "";
 
 // Read config file if it exists
 if (fs.existsSync(path.join(__dirname, "..", "config.js"))) {
   ({
+    ENV: env,
     MASTER_MINTER_CONTRACT_ADDRESS: masterMinterContractAddress,
-    MINTER_PROD: minterProd,
-    MINTER_STG: minterStg,
-    BURNER_PROD: burnerProd,
-    BURNER_STG: burnerStg,
-    MINTER_STG_CONTROLLER_INCREMENTER: minterStgControllerIncrementer,
-    MINTER_STG_CONTROLLER_REMOVER: minterStgControllerRemover,
-    BURNER_STG_CONTROLLER: burnerStgController,
-    MINTER_PROD_CONTROLLER_INCREMENTER: minterProdControllerIncrementer,
-    MINTER_PROD_CONTROLLER_REMOVER: minterProdControllerRemover,
-    BURNER_PROD_CONTROLLER: burnerProdController,
   } = require("../config.js"));
+
+  if (fs.existsSync(path.join(__dirname, "..", `config.${env}.js`))) {
+    ({
+      MINTER: minter,
+      BURNER: burner,
+      MINTER_CONTROLLER_INCREMENTER: minterControllerIncrementer,
+      MINTER_CONTROLLER_REMOVER: minterControllerRemover,
+      BURNER_CONTROLLER: burnerController,
+    } = require(`../config.${env}.js`));
+  }
 }
 
 module.exports = async function (deployer, network, accounts) {
   console.log(
-    `>>>>>>> Configuring Known Cold Storage Controllers of Minters And Burners <<<<<<<`
+    `>>>>>>> Configuring Known Cold Storage Controllers of Minters And Burners on ${env} <<<<<<<`
   );
 
   masterMinterContractAddress =
@@ -41,75 +38,31 @@ module.exports = async function (deployer, network, accounts) {
   const masterMinter = await MasterMinter.at(masterMinterContractAddress);
   const masterMinterOwnerAddress = accounts[1];
 
-  await masterMinter.configureController(
-    minterProdControllerIncrementer,
-    minterProd,
-    {
-      from: masterMinterOwnerAddress,
-    }
-  );
-
-  await masterMinter.configureController(
-    minterProdControllerRemover,
-    minterProd,
-    {
-      from: masterMinterOwnerAddress,
-    }
-  );
-
-  await masterMinter.configureController(burnerProdController, burnerProd, {
+  await masterMinter.configureController(minterControllerIncrementer, minter, {
     from: masterMinterOwnerAddress,
   });
 
-  await masterMinter.configureController(
-    minterStgControllerIncrementer,
-    minterStg,
-    {
-      from: masterMinterOwnerAddress,
-    }
-  );
-
-  await masterMinter.configureController(
-    minterStgControllerRemover,
-    minterStg,
-    {
-      from: masterMinterOwnerAddress,
-    }
-  );
-
-  await masterMinter.configureController(burnerStgController, burnerStg, {
+  await masterMinter.configureController(minterControllerRemover, minter, {
     from: masterMinterOwnerAddress,
   });
 
-  console.log(`>>>>>>> The following controllers are now configured: <<<<<<<`);
+  await masterMinter.configureController(burnerController, burner, {
+    from: masterMinterOwnerAddress,
+  });
+
   console.log(
-    `MINTER_PROD_CONTROLLER_INCREMENTER ${minterProdControllerIncrementer} controls ${await masterMinter.getWorker(
-      minterProdControllerIncrementer
+    `MINTER_CONTROLLER_INCREMENTER ${minterControllerIncrementer} controls ${await masterMinter.getWorker(
+      minterControllerIncrementer
     )}`
   );
   console.log(
-    `MINTER_PROD_CONTROLLER_REMOVER ${minterProdControllerRemover} controls ${await masterMinter.getWorker(
-      minterProdControllerRemover
+    `MINTER_CONTROLLER_REMOVER ${minterControllerRemover} controls ${await masterMinter.getWorker(
+      minterControllerRemover
     )}`
   );
   console.log(
-    `BURNER_PROD_CONTROLLER ${burnerProdController} controls ${await masterMinter.getWorker(
-      burnerProdController
-    )}`
-  );
-  console.log(
-    `MINTER_STG_CONTROLLER_INCREMENTER ${minterStgControllerIncrementer} controls ${await masterMinter.getWorker(
-      minterStgControllerIncrementer
-    )}`
-  );
-  console.log(
-    `MINTER_STG_CONTROLLER_REMOVER ${minterStgControllerRemover} controls ${await masterMinter.getWorker(
-      minterStgControllerRemover
-    )}`
-  );
-  console.log(
-    `BURNER_STG_CONTROLLER ${burnerStgController} controls ${await masterMinter.getWorker(
-      burnerStgController
+    `BURNER_CONTROLLER ${burnerController} controls ${await masterMinter.getWorker(
+      burnerController
     )}`
   );
 };

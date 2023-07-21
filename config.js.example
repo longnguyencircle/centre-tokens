@@ -1,7 +1,8 @@
 module.exports = {
 
   // ***** CONFIGURATION *********
-
+  // Environment: Either stg or prod
+  ENV: "",
   // these API keys are used to verify contracts
   // see truffle-config.js for more context
   ETHERSCAN_API_KEY: "",
@@ -49,26 +50,8 @@ module.exports = {
   PROXY_ADMIN_ADDRESS: "",
   PROXY_ADMIN_PRIVATE_KEY: "",
 
-  // ***** MINTER SETUP *********
-
-  MINTER_PROD: "",
-  MINTER_STG: "",
-  BURNER_PROD: "",
-  BURNER_STG: "",
-
-  // 115792089237316195423570985008687907853269984665640564039457584007 for testnet minter
-  MINT_ALLOWANCE_UNITS_PROD: 25000000,
-  MINT_ALLOWANCE_UNITS_STG: 25000,
 
   // ***** COLD STORAGE *********
-
-  MINTER_STG_CONTROLLER_INCREMENTER: "",
-  MINTER_STG_CONTROLLER_REMOVER: "",
-  BURNER_STG_CONTROLLER: "",
-
-  MINTER_PROD_CONTROLLER_INCREMENTER: "",
-  MINTER_PROD_CONTROLLER_REMOVER: "",
-  BURNER_PROD_CONTROLLER: "",
 
   // Pauser - can pause the contract
   COLD_PAUSER_ADDRESS: "",
